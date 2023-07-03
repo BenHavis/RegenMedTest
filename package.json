@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chakra-ui/react": "^2.7.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
@@ -22,6 +23,7 @@
     "buffer": "^6.0.3",
     "firebase": "^9.23.0",
     "formik": "^2.4.2",
+    "framer-motion": "^10.12.18",
     "geolib": "^3.3.4",
     "http-proxy-middleware": "^2.0.6",
     "jsonwebtoken": "^9.0.0",
@@ -34,6 +36,7 @@
     "react-country-region-selector": "^3.6.1",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",
+    "react-geocode": "^0.2.3",
     "react-google-maps": "^9.4.5",
     "react-hook-form": "^7.45.0",
     "react-icons": "^4.10.1",

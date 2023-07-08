@@ -104,7 +104,7 @@ MainData.beforeCreate(async (data) => {
 
 app.use(express.json()) // Add this middleware to parse the JSON request body
 
-const allowedOrigins = ['http://localhost:3001', 'https://tourmaline-dolphin-26b1c3.netlify.app', 'https://regenmedglobal.vercel.app/']
+const allowedOrigins = ['http://localhost:3001', 'https://tourmaline-dolphin-26b1c3.netlify.app', 'https://regenmedglobal.vercel.app']
 
 app.use((req, res, next) => {
   const origin = req.headers.origin

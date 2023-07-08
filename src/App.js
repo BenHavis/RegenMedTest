@@ -1,3 +1,4 @@
+import React from 'react'
 import Navbar from './components/Navbar'
 import Main from './pages/Main'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
@@ -10,13 +11,11 @@ import Register from './pages/Register'
 import Logout from './pages/Logout'
 import Claim from './pages/Claim'
 import { Route, Routes } from 'react-router-dom'
-import { ResultsProvider } from './components/ResultsContext'
 import AuthProvider from './AuthContext'
 
 function App () {
   return (
     <AuthProvider>
-      <ResultsProvider>
         <div className='App'>
           <Navbar />
           <Routes>
@@ -31,7 +30,6 @@ function App () {
             <Route path='/claim' element={<Claim />} />
           </Routes>
         </div>
-      </ResultsProvider>
     </AuthProvider>
 
   )

@@ -1,3 +1,4 @@
+require('dotenv').config()
 const axios = require('axios');
 const express = require('express')
 const { Sequelize, DataTypes } = require('sequelize')

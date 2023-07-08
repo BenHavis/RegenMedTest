@@ -9,7 +9,7 @@ import PlacesAutocomplete from 'react-places-autocomplete' // Make sure to remov
 import Result from './Result'
 import ResultsMap from './ResultsMap'
 import Sort from './Sort'
-const { GOOGLE_MAPS_API_KEY } = require('../config.js');
+const { GOOGLE_MAPS_API_KEY, API_ENDPOINT } = require('../config.js')
 
 const StyledForm = styled(Form)`
   width: 40%;
@@ -218,7 +218,7 @@ const Results = () => {
 			console.log('Checkbox Options:', checkboxOptions);
 	
 
-			const response = await axios.get('https://regenmedglobal.vercel.app/data', {
+			const response = await axios.get(`${API_ENDPOINT}/data`, {
 				params: {
 					filterTerm: String(filterTerm).toLowerCase(), // Convert to string and then apply toLowerCase()
 					checkboxOptions: checkboxOptions

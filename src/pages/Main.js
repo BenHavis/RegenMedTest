@@ -1,10 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import { useNavigate } from 'react-router-dom';
 import { Layout, Input, Button, Form, AutoComplete } from 'antd';
 import axios from 'axios';
-import { EnvironmentOutlined } from '@ant-design/icons';
 import { Icon } from '@iconify/react';
 import MainBack from '../assets/newdnagif.gif';
 import Services from './Services';
@@ -138,8 +137,6 @@ const Main = () => {
   const navigate = useNavigate();
   const [useCurrentLocation, setUseCurrentLocation] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [locationError, setLocationError] = useState(false);
-
   const [options, setOptions] = useState([]);
 
   const handleSearch = async (value) => {
@@ -161,55 +158,36 @@ const Main = () => {
     }
   };
 
-  const handleSubmit = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        if (!searchTerm) {
-          setErrorMessage('Please enter a search term');
-        } else if (!address) {
-          setErrorMessage('Please enter a location');
-        } else {
-          const searchString = searchTerm[0]; // Get the first element of the array
-          console.log('Search term:', searchString);
-
-          // Update top searches in the database
-          //console.log('Before updateTopSearches')
-          //pdateTopSearches(searchString)
-          //console.log('After updateTopSearches')
-
-          navigate('/results', {
-            state: {
-              searchTerm: searchString,
-              location: address,
-              checkedOptions: checkboxOptions,
-            },
-          });
-        }
-      })
-      .catch((errorInfo) => {
-        console.log('Validation Failed:', errorInfo);
-      });
-  };
+	const handleSubmit = () => {
+		form
+			.validateFields()
+			.then((values) => {
+				if (!searchTerm) {
+					setErrorMessage('Please enter a search term');
+				} else if (!address) {
+					setErrorMessage('Please enter a location');
+				} else {
+					console.log('Search term:', searchTerm);
+	
+					navigate('/results', {
+						state: {
+							searchTerm: searchTerm, // Use the complete searchTerm value
+							location: address,
+							checkedOptions: checkboxOptions,
+						},
+					});
+				}
+			})
+			.catch((errorInfo) => {
+				console.log('Validation Failed:', errorInfo);
+			});
+	};
+	
 
   const handleAddressChange = (value) => {
     setAddress(value);
   };
 
-  const handleLocationSubmit = useCallback(async () => {
-    try {
-      const latitude = null;
-      const longitude = null;
-
-      if (useCurrentLocation) {
-        // Code to get current location
-      } else if (address.trim() !== '') {
-        // Code to geocode address
-      }
-    } catch (error) {
-      console.log('Error retrieving search results:', error);
-    }
-  }, [address, useCurrentLocation]);
 
   const [checkboxOptions, setCheckboxOptions] = useState([
     { label: 'PRP', value: 'PRP', checked: false },
@@ -227,12 +205,6 @@ const Main = () => {
   const handleButtonStyle = (value) => {
     const option = checkboxOptions.find((option) => option.value === value);
     return option.checked ? { color: 'white', backgroundColor: 'var(--main-color)' } : {};
-  };
-
-  const handleSuggestionClick = (suggestion) => {
-    const filterTerm = suggestion.value.toString(); // Convert to string
-    setSearchTerm(filterTerm.toLowerCase());
-    console.log(`search term: ${searchTerm}`);
   };
 
   console.log('Render options:', options);
@@ -268,7 +240,7 @@ const Main = () => {
               onSelect={(value) => setAddress(value)} // Update the selected value in the state
               searchOptions={{
 								types: ['(cities)'],
-								componentRestrictions: { country: ['us', 'ca', 'mx'] } // Limit suggestions to USA, Canada, Mexico
+								componentRestrictions: { country: ['us'] } // Limit suggestions to USA, Canada, Mexico
 							}}
             >
               {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (

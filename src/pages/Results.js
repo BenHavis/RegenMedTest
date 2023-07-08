@@ -119,9 +119,7 @@ const Results = () => {
   const [userLocation, setUserLocation] = useState(null)
   const [filterCoordinates, setFilterCoordinates] = useState(null)
 
-	const handleUseCurrentLocationChange = (event) => {
-    setUseCurrentLocation(event.target.checked);
-  };
+
 
   const handleSearch = async (value) => {
     setFilterTerm(value)
@@ -220,7 +218,7 @@ const Results = () => {
 			console.log('Checkbox Options:', checkboxOptions);
 	
 
-			const response = await axios.get('http://regenmedglobal.com/data', {
+			const response = await axios.get('https://regenmedglobal.vercel.app/data', {
 				params: {
 					filterTerm: String(filterTerm).toLowerCase(), // Convert to string and then apply toLowerCase()
 					checkboxOptions: checkboxOptions

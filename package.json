@@ -23,6 +23,7 @@
     "bootstrap": "^5.3.0",
     "buffer": "^6.0.3",
     "concurrently": "^8.2.0",
+    "dotenv": "^16.3.1",
     "firebase": "^9.23.0",
     "firebase-functions": "^4.0.1",
     "formik": "^2.4.2",
@@ -59,14 +60,12 @@
     "xstate": "^4.38.0"
   },
 	"scripts": {
-		"start": "npm run start-server & npm run start-client",
+		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject",
-		"start-server": "node src/server.js",
-		"start-client": "react-scripts start",
-		"api": "node api/index.js"
+		"eject": "react-scripts eject"
 	},
+
   "eslintConfig": {
     "extends": [
       "react-app",

@@ -1,46 +1,45 @@
-// const { geocodeCity } = require('./utils/geocodeCity')
+const axios = require('axios');
 const express = require('express')
 const { Sequelize, DataTypes } = require('sequelize')
 const { GOOGLE_MAPS_API_KEY } = require('./config.js')
 const geolib = require('geolib')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const axios = require('axios')
 
 // Create an instance of Express
 const app = express()
 
-// Configure the PostgreSQL connection
-//const sequelize = new Sequelize('postgres://postgres:julius23!@localhost:5432/postgres')
-const sequelize = new Sequelize('postgres:// regeperp_regenmeduser:Regenmed123@localhost:5432/regeperp_regenmeddb');
-
-
 const geocodeCity = async (city, state, country) => {
   try {
-    const address = `${city}, ${state}, ${country}`
-    const encodedAddress = encodeURIComponent(address)
-    const apiKey =  GOOGLE_MAPS_API_KEY
+    const address = `${city}, ${state}, ${country}`;
+    const encodedAddress = encodeURIComponent(address);
+		const apiKey = 'AIzaSyBsY7TWsifdD_oYfwhEKBqVdLzfBaSeu6A'
 
     const response = await axios.get(
       `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${apiKey}`
-    )
+    );
 
-    const results = response.data.results
-    console.log('geocode results:', results)
+    const results = response.data.results;
+    console.log('geocode results:', results);
 
     if (results && results.length > 0) {
-      const result = results[0]
-      const { lat, lng } = result.geometry.location
-      return { latitude: lat, longitude: lng }
+      const result = results[0];
+      const { lat, lng } = result.geometry.location;
+      return { latitude: lat, longitude: lng };
     } else {
-      console.log('No results found for the city:', city, state, country)
-      return null
+      console.log('No results found for the city:', city, state, country);
+      return null;
     }
   } catch (error) {
-    console.log('Error geocoding:', error)
-    return null
+    console.log('Error geocoding:', error);
+    return null;
   }
-}
+};
+
+
+// Configure the PostgreSQL connection
+const sequelize = new Sequelize('postgres://postgres:julius23!@localhost:5432/postgres')
+// const sequelize = new Sequelize('postgres://postgres:julius23!@/postgres?unix_socket=/cloudsql/regenmedglobal-75fda:us-central1:regenmedglobal');
 
 // Define the model for the "maindata" table
 const MainData = sequelize.define(
@@ -105,28 +104,29 @@ MainData.beforeCreate(async (data) => {
 
 app.use(express.json()) // Add this middleware to parse the JSON request body
 
+const allowedOrigins = ['http://localhost:3001', 'https://tourmaline-dolphin-26b1c3.netlify.app', 'https://regenmedglobal.vercel.app/'];
+
 app.use((req, res, next) => {
-  const allowedOrigins = ['http://localhost:3001', 'https://regenmedglobal-75fda.web.app', 'https://regenmedglobal.com/']
-  const origin = req.headers.origin
+  const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin)
+    res.header('Access-Control-Allow-Origin', origin);
   }
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE') // Add PUT method
-  next()
-})
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Add PUT method
+  next();
+});
 
 
 app.get('/data', async (req, res) => {
   try {
     const { filterTerm, checkboxOptions, city, state, country, maxDistance = 25 } = req.query
 
+		// Console.log req.query
+    console.log('req.query:', req.query);
+
     // Geocode the city, state, country to get user coordinates
-    console.log('Geocoding city:', city, state, country)
-    const userCoordinates = await geocodeCity(city, state, country, GOOGLE_MAPS_API_KEY)
-    console.log('User coordinates:', userCoordinates)
+    const userCoordinates = await geocodeCity(city, state, country)
     if (!userCoordinates) {
-      console.log('Invalid location:', city, state, country)
       return res.status(400).json({ error: 'Invalid location' })
     }
 
@@ -164,7 +164,6 @@ app.get('/data', async (req, res) => {
 
     if (filteredResults.length === 0) {
       // Send a custom response indicating no results within the radius
-      console.log('No results found within the specified radius')
       return res.status(404).json({ error: 'No results found within the specified radius' })
     }
 
@@ -295,7 +294,7 @@ app.post('/data', async (req, res) => {
     const id = Math.floor(Math.random() * 9000000) + 1000000
 
     // Geocode the city, state, and country to get the latitude and longitude
-    const userCoordinates = await geocodeCity(city, state, country, GOOGLE_MAPS_API_KEY)
+    const userCoordinates = await geocodeCity(city, state, country)
     if (!userCoordinates) {
       return res.status(400).json({ error: 'Invalid location' })
     }
@@ -325,8 +324,7 @@ app.post('/data', async (req, res) => {
 })
 
 // Sync the model with the database and start the server
-// const port = 3000 // Replace with the desired port for your server
-const port = 5432
+const port = 3000 // Replace with the desired port for your server
 sequelize
   .sync()
   .then(() => {
